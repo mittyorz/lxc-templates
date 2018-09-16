@@ -124,8 +124,9 @@ pacman-key --populate ${keyring}
 # enable networkd
 systemctl enable systemd-networkd
 systemctl enable systemd-resolved
-ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
 EOF
+    # /etc/resolv.conf is mounted from host environment with arch-chroot and cannot be overwritten, so use normal chroot
+    chroot "${rootfs_path}" /usr/bin/ln -sf /run/systemd/resolve/resolv.conf /etc/resolv.conf
     # enable getty on active ttys
     local nttys=$(cat "${config_path}/config" ${shared_config} ${common_config} | grep "^lxc.tty.max" | head -n1 | cut -d= -f2 | tr -d "[:blank:]")
     local devttydir=$(cat "${config_path}/config" ${shared_config} ${common_config} | grep "^lxc.tty.dir" | head -n1 | cut -d= -f2 | tr -d "[:blank:]")
