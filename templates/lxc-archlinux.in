@@ -70,6 +70,12 @@ split_string() {
 
 # Arch-specific preconfiguration for container
 configure_arch() {
+    # choose default keys for pacman-key
+    case "$arch" in
+        arm*) keyring="archlinuxarm";;
+        *)    keyring="archlinux";;
+    esac
+
     # on ArchLinux, read defaults from host systemd configuration
     if [ "${is_arch}" ]; then
         cp -p /etc/locale.conf /etc/locale.gen "${rootfs_path}/etc/"
@@ -113,7 +119,7 @@ sed -e 's/^ConditionPathIsReadWrite=\/proc\/sys\/$/ConditionPathIsReadWrite=\/pr
     -i /usr/lib/systemd/system/systemd-sysctl.service
 # initialize pacman keyring
 pacman-key --init
-pacman-key --populate archlinux
+pacman-key --populate ${keyring}
 
 # enable networkd
 systemctl enable systemd-networkd
