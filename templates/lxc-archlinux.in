@@ -185,7 +185,7 @@ install_arch() {
         pacman_config="${container_pacman_config}"
     fi
 
-    if ! pacstrap -dcGC "${pacman_config}" "${rootfs_path}" \
+    if ! pacstrap -cGC "${pacman_config}" "${rootfs_path}" \
             ${base_packages[@]}; then
         echo "Failed to install container packages"
         return 1
